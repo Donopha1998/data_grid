@@ -16,12 +16,13 @@ const DataGrid: React.FC<DataGridProps> = ({ columns, data, pageSize = 10, custo
     setSortedData(data);
   }, [data]);
 
-  const handleSearch = useCallback((query: string) => {
-    const filteredData = data.filter(item =>
-      columns.some(column => item[column.key].toString().toLowerCase().includes(query.toLowerCase()))
-    );
-    setSortedData(filteredData);
-  }, [data, columns]);
+const handleSearch = useCallback((query: string) => {
+  const regex = new RegExp(query, 'i'); 
+  const filteredData = data.filter(item =>
+    columns.some(column => regex.test(item[column.key].toString()))
+  );
+  setSortedData(filteredData);
+}, [data, columns]);
 
   const paginatedData = useMemo(() => {
     const startIndex = (currentPage - 1) * pageSize;
